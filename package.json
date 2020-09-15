@@ -32,6 +32,7 @@
   "author": "Joel Edwards <joeledwards@gmail.com>",
   "license": "ISC",
   "devDependencies": {
+    "@buzuli/meter": "^1.1.1",
     "standard": "^14.2.0",
     "tap": "^14.6.2"
   }
