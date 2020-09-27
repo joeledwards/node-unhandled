@@ -1,6 +1,6 @@
 {
   "name": "@buzuli/unhandled",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Manage un-handled rejections or un-caught exceptions",
   "main": "lib/index.js",
   "scripts": {
