@@ -58,6 +58,30 @@ tap.test('default config just logs the error', async assert => {
   })
 })
 
+tap.test('verbose config logs more detail', async assert => {
+  await runTest({ verbose: true }, c => {
+    c.doReject('rejected')
+    c.doThrow('excepted')
+    c.doSigint()
+    c.doSigterm()
+
+    assert.equal(c.exitCalls().length, 0)
+    assert.equal(c.logs().length, 12)
+    assert.same(c.logs()[0], ['Setting up listener for event "uncaughtException"'])
+    assert.same(c.logs()[1], ['Setting up listener for event "unhandledRejection"'])
+    assert.same(c.logs()[2], ['Setting up listener for event "SIGINT"'])
+    assert.same(c.logs()[3], ['Setting up listener for event "SIGTERM"'])
+    assert.same(c.logs()[4], ['Un-handled Promise Rejection :', 'rejected'])
+    assert.same(c.logs()[5], ['Not exiting process per config'])
+    assert.same(c.logs()[6], ['Un-caught Exception :', 'excepted'])
+    assert.same(c.logs()[7], ['Not exiting process per config'])
+    assert.same(c.logs()[8], ['SIGINT Received'])
+    assert.same(c.logs()[9], ['Not exiting process per config'])
+    assert.same(c.logs()[10], ['SIGTERM Received'])
+    assert.same(c.logs()[11], ['Not exiting process per config'])
+  })
+})
+
 tap.test('custom handler can be passed in', async assert => {
   const metrics = meter()
   const handler = ({ event, error }) => metrics.add(`handler:${event}:${error}`)
@@ -389,7 +413,7 @@ tap.test('override the logger', async assert => {
     c.doSigint()
     c.doSigterm()
 
-    assert.equals(c.logs().length, 0)
+    assert.equal(c.logs().length, 0)
   })
 
   await runTest({ logger: {} }, c => {
@@ -398,35 +422,35 @@ tap.test('override the logger', async assert => {
     c.doSigint()
     c.doSigterm()
 
-    assert.equals(c.logs().length, 0)
+    assert.equal(c.logs().length, 0)
   })
 })
 
 tap.test('log error in handler', async assert => {
   await runTest({ handler: () => toss('handle-fail') }, c => {
     c.doThrow('excepted')
-    assert.equals(c.logs().length, 1)
+    assert.equal(c.logs().length, 1)
     assert.same(c.logs()[0][0], "Error in handler for 'uncaughtException' event :")
     assert.same(c.logs()[0][1].message, 'handle-fail')
   })
 
   await runTest({ handler: () => toss('handle-fail') }, c => {
     c.doReject('rejected')
-    assert.equals(c.logs().length, 1)
+    assert.equal(c.logs().length, 1)
     assert.same(c.logs()[0][0], "Error in handler for 'unhandledRejection' event :")
     assert.same(c.logs()[0][1].message, 'handle-fail')
   })
 
   await runTest({ handler: () => toss('handle-fail') }, c => {
     c.doSigint()
-    assert.equals(c.logs().length, 1)
+    assert.equal(c.logs().length, 1)
     assert.same(c.logs()[0][0], "Error in handler for 'SIGINT' event :")
     assert.same(c.logs()[0][1].message, 'handle-fail')
   })
 
   await runTest({ handler: () => toss('handle-fail') }, c => {
     c.doSigterm()
-    assert.equals(c.logs().length, 1)
+    assert.equal(c.logs().length, 1)
     assert.same(c.logs()[0][0], "Error in handler for 'SIGTERM' event :")
     assert.same(c.logs()[0][1].message, 'handle-fail')
   })
