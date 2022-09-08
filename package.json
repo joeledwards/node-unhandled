@@ -1,6 +1,6 @@
 {
   "name": "@buzuli/unhandled",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Manage un-handled rejections or un-caught exceptions",
   "main": "lib/index.js",
   "repository": "github:joeledwards/node-unhandled",
